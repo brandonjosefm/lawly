@@ -1,0 +1,59 @@
+# Lawly — Contexto del proyecto
+
+## Qué es
+Lawly es una herramienta web de estudio del **Decreto 15-2026 de Guatemala**, la "Ley Integral para la Prevención y Represión del Lavado de Dinero u Otros Activos y del Financiamiento del Terrorismo" (Ley LD/FT).
+
+El objetivo es eliminar la fricción de leer una ley densa. La idea central es "un TikTok para documentos legales": consumo ligero y progresivo, con revelación gradual de complejidad.
+
+## Concepto de producto
+Cada artículo se presenta en capas:
+1. **Hook** — una línea que resume el artículo en lenguaje claro.
+2. **En corto** — explicación en lenguaje cotidiano, sin jerga jurídica ni técnica.
+3. **Ley completa** — el texto legal verbatim del decreto, citable.
+
+La navegación respeta la **estructura real de la ley** (Título → Capítulo → Artículo) mediante un índice plegable. No se interpreta ni se reagrupa el contenido por "temas" — la ley se organiza como está redactada.
+
+## Alcance actual (v1)
+- Solo **Título I y Título II**, Artículos **1 al 44** (disposiciones generales + régimen administrativo preventivo).
+- Mecánicas activas: índice plegable, vista dual (En corto / Ley completa), búsqueda universal, barra de progreso persistente.
+- Quiz por título: **formato preparado pero NO activado** (placeholder visible al final de cada título).
+
+## Estructura de archivos
+```
+/
+├── index.html          # Estructura HTML, enlaza CSS/JS/datos
+├── css/styles.css      # Todos los estilos (tema oscuro, variables CSS en :root)
+├── js/app.js           # Toda la lógica (render, navegación, búsqueda, progreso)
+├── data/ley.js         # Los 44 artículos: window.LAWLY_DATA (estructura + contenido)
+├── data/ley.json       # Mismos datos en JSON puro (portabilidad)
+├── CLAUDE.md           # Este archivo
+└── README.md
+```
+
+## Modelo de datos (data/ley.js)
+```js
+window.LAWLY_DATA = {
+  structure: [ { id, label, name, caps:[ { id, name, arts:[nums] } ] } ],
+  articles: { "N": { num, title, full, hook, corto } }
+}
+```
+- `full` = texto legal verbatim (NO modificar sin verificar contra el decreto original).
+- `hook` y `corto` = material de estudio interpretativo (se puede refinar).
+
+## Reglas importantes
+- **El texto legal (`full`) es sagrado**: es verbatim del Decreto 15-2026. No parafrasear ni "mejorar". Solo corregir errores de transcripción contra la fuente.
+- **El lenguaje de `corto` debe ser cotidiano**: sin términos técnicos de auditoría/cumplimiento, sin "por qué importa". Solo explicar qué dice el artículo en palabras simples.
+- El progreso se guarda en `localStorage` (clave `lawly_progress`).
+- Tipografía y paleta de colores están pendientes de rediseño — actualmente es una base neutra intencional.
+
+## Próximos pasos planificados
+1. Extender contenido a Títulos III–VI (Arts. 45–126).
+2. Activar el quiz relámpago (3 preguntas por título + badge de desbloqueo).
+3. Identidad visual: tipografía y paleta definitivas.
+
+## Despliegue
+Sitio estático, sin backend. Se publica vía GitHub Pages o Netlify desde este repositorio.
+```
+
+## Comandos útiles
+- Probar localmente: abrir `index.html` en el navegador, o `python3 -m http.server` en la raíz.
