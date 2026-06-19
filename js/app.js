@@ -139,6 +139,7 @@ function updateProgress(){
   const total = Object.keys(DATA.articles).length;
   const c=Object.keys(state.done).length;
   document.getElementById('pcount').textContent=c;
+  document.getElementById('ptotal').textContent=total;
   document.getElementById('pbar').style.width=(total>0?c/total*100:0)+'%';
 }
 document.getElementById('search').addEventListener('input',e=>{ state.query=e.target.value; if(state.query.trim())state.openCard=null; render(); });
