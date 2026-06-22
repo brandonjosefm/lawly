@@ -272,28 +272,169 @@ body{line-height:1.5;font-size:15px}
   color:var(--teal);
 }
 
-/* ── QUIZ PLACEHOLDER ─────────────────────────────────────────────────── */
+/* ── QUIZ CTA ─────────────────────────────────────────────────────────── */
 .quiz-cta{
   margin:10px;border:1px dashed var(--amber);
   border-radius:var(--radius-sm);padding:14px;
   display:flex;align-items:center;gap:12px;
   background:linear-gradient(135deg,var(--surface),rgba(177,134,45,.07));
-  opacity:.7;
+  cursor:pointer;transition:border-color .2s,background .2s,opacity .2s;
+  opacity:.8;
 }
+.quiz-cta:hover{border-color:var(--gold);opacity:1;background:linear-gradient(135deg,var(--surface2),rgba(255,198,41,.08))}
+.quiz-cta.earned{border-color:var(--gold);opacity:1;border-style:solid}
 .quiz-cta .qi{
   width:38px;height:38px;border-radius:9px;
   background:var(--gold-dim);border:1px solid var(--amber);
   display:flex;align-items:center;justify-content:center;
-  font-size:20px;flex-shrink:0;
+  font-size:20px;flex-shrink:0;transition:transform .2s;
 }
+.quiz-cta:hover .qi{transform:scale(1.1)}
 .quiz-cta .qt{flex:1}
 .quiz-cta .qt .qh{font-size:12.5px;font-weight:800;color:var(--gold);letter-spacing:.02em}
 .quiz-cta .qt .qs{font-size:11px;color:var(--text3);margin-top:2px;font-weight:600}
 .quiz-cta .qbadge{
   font-size:10px;color:var(--amber);font-weight:800;
   border:1px solid var(--amber);border-radius:20px;padding:3px 9px;
-  letter-spacing:.04em;text-transform:uppercase;
+  letter-spacing:.04em;text-transform:uppercase;white-space:nowrap;
 }
+.quiz-cta.earned .qbadge{color:var(--gold);border-color:var(--gold);background:var(--gold-dim)}
+
+/* ── QUIZ MODAL ───────────────────────────────────────────────────────── */
+#quiz-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,10,20,.85);
+  display:flex;align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(6px);
+  animation:fadeIn .2s ease;
+}
+@media(min-width:500px){
+  #quiz-overlay{align-items:center}
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.qmodal{
+  background:var(--surface);
+  border:1px solid var(--border2);
+  border-radius:var(--radius) var(--radius) 0 0;
+  width:100%;max-width:560px;
+  padding:0 0 24px;
+  animation:slideUp .25s cubic-bezier(.4,0,.2,1);
+  max-height:90vh;overflow-y:auto;
+}
+@media(min-width:500px){
+  .qmodal{border-radius:var(--radius);max-height:85vh}
+}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+
+.qmod-head{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:18px 18px 12px;border-bottom:1px solid var(--border);
+}
+.qmod-meta{display:flex;flex-direction:column;gap:2px}
+.qmod-label{
+  font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--gold);
+}
+.qmod-title{font-size:13px;font-weight:700;color:var(--text2)}
+.qmod-close{
+  background:none;border:none;color:var(--text3);
+  font-size:16px;cursor:pointer;padding:2px 6px;
+  border-radius:6px;transition:color .15s,background .15s;flex-shrink:0;
+}
+.qmod-close:hover{color:var(--text);background:var(--surface2)}
+
+.qmod-steps{
+  display:flex;gap:6px;padding:14px 18px 0;
+}
+.qstep{
+  flex:1;height:4px;border-radius:2px;
+  background:var(--border2);transition:background .3s;
+}
+.qstep.done{background:var(--green)}
+.qstep.active{background:var(--gold)}
+
+.qmod-body{padding:18px}
+.qmod-num{
+  font-size:10px;font-weight:800;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--text3);margin-bottom:10px;
+}
+.qmod-q{
+  font-size:15px;font-weight:700;color:var(--text);
+  line-height:1.5;margin-bottom:16px;
+}
+
+.qmod-opts{display:flex;flex-direction:column;gap:8px}
+.qopt{
+  width:100%;text-align:left;
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--radius-sm);padding:12px 14px;
+  color:var(--text2);font-size:13.5px;font-weight:600;
+  font-family:var(--font);cursor:pointer;
+  transition:border-color .15s,background .15s,color .15s;
+  line-height:1.4;
+}
+.qopt:hover:not(:disabled){border-color:var(--blue);color:var(--text);background:var(--surface3)}
+.qopt.correct{
+  border-color:var(--green);background:rgba(76,165,133,.12);
+  color:var(--green);
+}
+.qopt.wrong{
+  border-color:#e05050;background:rgba(224,80,80,.1);
+  color:#e07070;
+}
+.qopt:disabled{cursor:default}
+
+.qmod-ref{
+  margin-top:14px;padding:11px 13px;
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:12px;color:var(--text3);font-weight:600;line-height:1.5;
+}
+.ref-ok{color:var(--green);font-weight:800}
+.ref-fail{color:#e07070;font-weight:800}
+
+.qmod-foot{
+  display:flex;justify-content:flex-end;
+  padding:0 18px;margin-top:4px;
+}
+.qmod-next{
+  background:linear-gradient(90deg,var(--blue),var(--teal));
+  border:none;border-radius:var(--radius-sm);
+  padding:11px 22px;color:#fff;
+  font-size:13px;font-weight:800;font-family:var(--font);
+  cursor:pointer;letter-spacing:.03em;text-transform:uppercase;
+  transition:opacity .15s,transform .15s;
+  box-shadow:0 0 14px rgba(0,151,206,.3);
+}
+.qmod-next:hover{opacity:.9;transform:scale(1.02)}
+
+/* ── QUIZ RESULT ─────────────────────────────────────────────────────── */
+.qresult{
+  display:flex;flex-direction:column;align-items:center;
+  padding:32px 24px;text-align:center;
+}
+.qres-badge{font-size:56px;line-height:1;margin-bottom:10px;animation:pop .4s cubic-bezier(.17,.67,.42,1.4)}
+@keyframes pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.qres-score{
+  font-size:36px;font-weight:800;color:var(--gold);
+  margin-bottom:8px;letter-spacing:-.01em;
+}
+.qres-msg{
+  font-size:14px;color:var(--text2);font-weight:600;
+  line-height:1.6;margin-bottom:24px;
+}
+.qres-msg b{color:var(--gold)}
+.qres-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.qmod-close2{
+  background:var(--surface2);border:1px solid var(--border2);
+  border-radius:var(--radius-sm);padding:11px 20px;
+  color:var(--text2);font-size:13px;font-weight:800;
+  font-family:var(--font);cursor:pointer;
+  transition:border-color .15s,color .15s;
+  letter-spacing:.03em;text-transform:uppercase;
+}
+.qmod-close2:hover{border-color:var(--blue);color:var(--text)}
 
 /* ── SEARCH RESULTS ───────────────────────────────────────────────────── */
 .results-label{
